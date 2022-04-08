@@ -1,0 +1,15 @@
+doctype html
+html(lang="ko")
+    head
+        title 미니멀 블로그
+        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+    body
+        main
+            a(href=`/posts/edit/${post.id}`) 수정
+            span &nbsp;&nbsp;|&nbsp;&nbsp;
+            a(href=`/posts/delete/${post.id}`) 삭제
+            h3=post.title
+            h4 by #{post.author}
+            h5=post.date
+            div=post.contents
+            div 댓글창...

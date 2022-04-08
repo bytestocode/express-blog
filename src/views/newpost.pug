@@ -1,0 +1,13 @@
+doctype html
+html(lang="ko")
+    head
+        title 미니멀 블로그
+        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+    body
+        main
+            form(method="POST")
+                input(placeholder="제목" type="text" name="title" required)
+                input(placeholder="작성자" type="text" name="author" required)
+                input(placeholder="내용" type="text" name="contents" required)
+                input(type="submit" value="작성하기")
+

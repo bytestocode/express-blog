@@ -1,0 +1,14 @@
+doctype html
+html(lang="ko")
+    head
+        title 미니멀 블로그
+        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+    body
+        main
+            a(href="/newpost") 새글 작성
+            each post in posts
+                h3
+                    a(href=`/posts/${post.id}`)=post.title
+                h4 by #{post.author}
+                h5=post.date
+                hr
