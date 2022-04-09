@@ -47,7 +47,8 @@ let posts = [
 
 router.get("/", async (req, res) => {
   const posts = await Posts.find({});
-  return res.render("main", { posts });
+  const reverse_posts = posts.reverse();
+  return res.render("main", { posts: reverse_posts });
 });
 
 router.get("/newpost", (req, res) => {
@@ -81,9 +82,9 @@ router.get("/posts/edit/:id", async (req, res) => {
 });
 
 router.post("/posts/edit/:id", async (req, res) => {
-  const { title, contents } = req.body;
+  const { title, author, contents } = req.body;
   const { id } = req.params;
-  await Posts.findByIdAndUpdate(id, { $set: { title, contents } });
+  await Posts.findByIdAndUpdate(id, { $set: { title, author, contents } });
   return res.redirect(`/posts/${id}`);
 });
 
@@ -94,9 +95,8 @@ router.get("/posts/delete/:id", async (req, res) => {
 });
 
 router.post("/posts/:id/newcomments", async (req, res) => {
-  const { author, contents } = req.body;
   const { id } = req.params;
-  const post = await Posts.findById(id);
+  const { author, contents } = req.body;
   const commentId = Date.now() - 1649400000000;
 
   await Posts.findByIdAndUpdate(id, {
@@ -138,7 +138,6 @@ router.post("/posts/:id/:commentId/edit", async (req, res) => {
       return comment;
     }
   });
-  console.log(comments);
 
   await post.updateOne({ $set: { comments } });
 
