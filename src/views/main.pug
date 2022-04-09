@@ -8,7 +8,9 @@ html(lang="ko")
             a(href="/newpost") 새글 작성
             each post in posts
                 h3
-                    a(href=`/posts/${post.id}`)=post.title
+                    a(href=`/posts/${post._id}`)=post.title
                 h4 by #{post.author}
-                h5=post.date
+                h5=post.date.toLocaleString()
                 hr
+            else
+                div 아직 작성된 게시글이 없습니다.

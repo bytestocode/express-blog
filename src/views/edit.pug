@@ -9,4 +9,5 @@ html(lang="ko")
                 input(placeholder="제목" type="text" name="title" required value=`${post.title}`)
                 input(placeholder="내용" type="text" name="contents" required value=`${post.contents}`)
                 input(type="submit" value="수정하기")
+                a(href=`/posts/${post._id}`) 취소
 

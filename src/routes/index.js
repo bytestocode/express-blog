@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const Posts = require("../schemas/posts");
 
+/*
 let posts = [
   {
     id: 1,
@@ -27,6 +29,7 @@ let posts = [
     comments: [],
   },
 ];
+*/
 
 /*
  * 전체 게시글 조회 => get => /
@@ -42,57 +45,104 @@ let posts = [
  *
  */
 
-router.get("/", (req, res) => {
-  return res.render("main", { posts: posts.reverse() });
+router.get("/", async (req, res) => {
+  const posts = await Posts.find({});
+  return res.render("main", { posts });
 });
 
 router.get("/newpost", (req, res) => {
   return res.render("newpost");
 });
 
-router.post("/newpost", (req, res) => {
+router.post("/newpost", async (req, res) => {
   const { title, author, contents } = req.body;
-  const newPost = {
-    id: posts.length + 1,
+
+  await Posts.create({
     title,
     author,
     contents,
     date: new Date(),
     comments: [],
-  };
-  posts.push(newPost);
+  });
+
   return res.redirect("/");
 });
 
-router.get("/posts/:id", (req, res) => {
+router.get("/posts/:id", async (req, res) => {
   const { id } = req.params;
-  const post = posts.find((post) => post.id === +id);
+  const post = await Posts.findById(id);
   return res.render("read", { post });
 });
 
-router.get("/posts/edit/:id", (req, res) => {
+router.get("/posts/edit/:id", async (req, res) => {
   const { id } = req.params;
-  const post = posts.find((post) => post.id === +id);
+  const post = await Posts.findById(id);
   return res.render("edit", { post });
 });
 
-router.post("/posts/edit/:id", (req, res) => {
+router.post("/posts/edit/:id", async (req, res) => {
   const { title, contents } = req.body;
   const { id } = req.params;
-  posts = posts.map((post) => {
-    if (post.id === +id) {
-      return { ...post, title, contents };
-    } else {
-      return post;
-    }
+  await Posts.findByIdAndUpdate(id, { $set: { title, contents } });
+  return res.redirect(`/posts/${id}`);
+});
+
+router.get("/posts/delete/:id", async (req, res) => {
+  const { id } = req.params;
+  await Posts.findByIdAndDelete(id);
+  return res.redirect("/");
+});
+
+router.post("/posts/:id/newcomments", async (req, res) => {
+  const { author, contents } = req.body;
+  const { id } = req.params;
+  const post = await Posts.findById(id);
+  const commentId = Date.now() - 1649400000000;
+
+  await Posts.findByIdAndUpdate(id, {
+    $push: { comments: { commentId, author, contents } },
   });
   return res.redirect(`/posts/${id}`);
 });
 
-router.get("/posts/delete/:id", (req, res) => {
-  const { id } = req.params;
-  posts = posts.filter((post) => post.id !== +id);
-  return res.redirect("/");
+router.get("/posts/:id/:commentId/delete", async (req, res) => {
+  const { id, commentId } = req.params;
+  const post = await Posts.findById(id);
+  const comment = post.comments.find((comment) => {
+    return comment.commentId === +commentId;
+  });
+  await post.updateOne({
+    $pull: { comments: comment },
+  });
+  return res.redirect(`/posts/${id}`);
+});
+
+router.get("/posts/:id/:commentId/edit", async (req, res) => {
+  const { id, commentId } = req.params;
+  const post = await Posts.findById(id);
+  const comment = post.comments.find((comment) => {
+    return comment.commentId === +commentId;
+  });
+  return res.render("read", { post, comment });
+});
+
+router.post("/posts/:id/:commentId/edit", async (req, res) => {
+  const { id, commentId } = req.params;
+  const { author, contents } = req.body;
+
+  const post = await Posts.findById(id);
+  const comments = post.comments.map((comment) => {
+    if (comment.commentId === +commentId) {
+      return { commentId: +commentId, author, contents };
+    } else {
+      return comment;
+    }
+  });
+  console.log(comments);
+
+  await post.updateOne({ $set: { comments } });
+
+  return res.redirect(`/posts/${id}`);
 });
 
 module.exports = router;
