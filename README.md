@@ -1,4 +1,27 @@
-# 기본적인 기능의 블로그 만들기
+# CRUD 블로그 만들기
+
+## 버젼별 주요 특징 (변경사항)
+### 22/04/09 (최초버젼)
+> ### 0. 주요 기능
+>> 1. 게시글 작성/ 조회/ 수정/ 삭제   
+>> 2. 댓글 작성/ 조회/ 수정/ 삭제
+> ### 1. 특징
+>> post 모델의 comment 필드(배열) 타입: comment 객체 
+
+### 22/04/11
+> ### 0. 기능 변경 없음
+> ### 1. post, comment 스키마 별도로 구분
+> #### 1-1. <이유> 별도로 구분하면 데이터 조작이 수월: CRUD 관점   
+> #### 1-2. <문제> comment 컬렉션이 너무 커져서 search하는데 너무 오래 걸리지 않을까?
+> ### 2. post 모델의 comment 필드(배열) 타입 수정 
+>> 당초- comment 객체   
+>> 변경- comment 다큐먼트의 id
+> ### 3. post 게시날짜 역순 정렬 수정
+> #### 3-1. <이유> 코드 길이 줄이기   
+> #### 3-2. <문제> 속도는 어떤게 더 빠를까? 
+>> 당초- 서버에서 정렬: post.reverse();   
+>> 변경- DB에서 받아올 때 정렬: Post.find({}).sort({ createdAt: -1 });
+> 
 
 ## 와이어프레임
 <img src="./img/framework.png" />
@@ -15,8 +38,8 @@
 
 ### 2. 게시글 작성
 #### Request
-> method: GET/POST   
-> URL: /newpost   
+> method: GET, POST   
+> URL: /posts   
 > body: { title, author, contents }
 
 #### Response
@@ -34,8 +57,8 @@
 
 ### 4. 게시글 수정
 #### Request
-> method: GET/POST   
-> URL: /posts/edit/:id   
+> method: GET, POST   
+> URL: /posts/:id/edit   
 > body: { title, author, contents }
 
 #### Response
@@ -45,7 +68,7 @@
 ### 5. 게시글 삭제
 #### Request
 > method: GET   
-> URL: /posts/delete/:id
+> URL: /posts/:id/delete
 
 #### Response
 > HTTP 상태코드: 200    
@@ -57,7 +80,7 @@
 ### 7. 댓글 작성
 #### Request
 > method: GET   
-> URL: /posts/:id/newcomments   
+> URL: /posts/:id/comments   
 > body: { author, contents } 
 
 #### Response
@@ -66,7 +89,7 @@
 
 ### 8. 댓글 수정
 #### Request
-> method: GET/POST   
+> method: GET, POST   
 > URL: /posts/:id/:commentId/edit   
 > body: { author, contents }
 
@@ -82,4 +105,3 @@
 #### Response
 > HTTP 상태코드: 200    
 > payload: {}
-
