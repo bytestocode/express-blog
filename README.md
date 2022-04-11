@@ -32,6 +32,7 @@
 >> 당초- post만 삭제   
 >> 변경- post에 따른 comments 모두 삭제
 > ```javascript
+> // src/routes/index.js 75~79줄
 > // post와 연관된 comments 삭제
 > const { comments } = post;
 > for (const comment of comments) {
