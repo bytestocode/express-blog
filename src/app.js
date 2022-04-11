@@ -1,18 +1,18 @@
 const express = require("express");
-const app = express();
-const PORT = 3000;
-const router = require("./routes");
 const connect = require("./schemas");
-connect();
+const router = require("./routes");
 
+const PORT = 3000;
+const app = express();
 app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
+connect();
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use("/", router);
 
 app.listen(PORT, () => {
-  console.log(`서버 실행 중: http://localhost:${PORT}`);
+  console.log(`server started: http://localhost:${PORT}`);
 });
