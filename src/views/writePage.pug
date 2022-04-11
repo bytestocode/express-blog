@@ -5,9 +5,11 @@ html(lang="ko")
         link(rel="stylesheet", href="https://unpkg.com/mvp.css")
     body
         main
+            if errorMessage
+                span=errorMessage
             form(method="POST")
                 input(placeholder="제목" type="text" name="title" required)
                 input(placeholder="작성자" type="text" name="author" required)
-                textarea(style={width: "300px", height: "200px"} placeholder="내용" type="text" name="contents" required)
+                textarea(style={width: "300px", height: "200px"} placeholder="내용" name="contents" required)
                 input(type="submit" value="작성하기")
                 a(href="/") 취소
