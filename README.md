@@ -24,7 +24,7 @@
 > 
 
 ## 와이어프레임
-<img src="./img/framework.png" />
+<img src="./img/framework.png" alt=""/>
 
 ## API
 ### 1. 전체 게시글 목록 조회
