@@ -73,7 +73,7 @@ router.get("/posts/:id([0-9a-f]{24})/delete", async (req, res) => {
   }
 
   // post와 연관된 comments도 DB에서 삭제
-  const comments = post.comments;
+  const { comments } = post;
   for (const comment of comments) {
     await Comment.findByIdAndDelete(comment._id);
   }
