@@ -8,7 +8,7 @@
 > ### 1. 특징
 >> post 모델의 comment 필드(배열) 타입: comment 객체 
 
-### 22/04/11
+### 22/04/11 14:21
 > ### 0. 기능 변경 없음
 > ### 1. post, comment 스키마 별도로 구분
 > #### 1-1. <이유> 별도로 구분하면 데이터 조작이 수월: CRUD 관점   
@@ -21,7 +21,23 @@
 > #### 3-2. <문제> 속도는 어떤게 더 빠를까? 
 >> 당초- 서버에서 정렬: post.reverse();   
 >> 변경- DB에서 받아올 때 정렬: Post.find({}).sort({ createdAt: -1 });
-> 
+
+### 22/04/11 15:50
+> ### 0. 기능 변경 없음
+> ### 1. 예외처리
+> #### 1-1. DB에서 post, comment를 못찾을 경우 404페이지 return
+> #### 1-2. post, comment Create 실패시 400 응답 (try...catch)
+> ### 2. post 삭제시 post에 달린 comments 모두 DB에서 삭제
+> #### 2-1. <이유> comments를 DB에 남길 이유가 없음
+>> 당초- post만 삭제   
+>> 변경- post에 따른 comments 모두 삭제
+> ```javascript
+> // post와 연관된 comments 삭제
+> const { comments } = post;
+> for (const comment of comments) {
+>     await Comment.findByIdAndDelete(comment._id);
+> }
+> ```
 
 ## 와이어프레임
 <img src="./img/framework.png" alt=""/>
