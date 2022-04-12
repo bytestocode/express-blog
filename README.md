@@ -60,7 +60,7 @@ typescript: v4.6.3
 > Post, Comment 스키마의 인터페이스를 정의 => IPost, IComment
 > ### 1. 주요 기능별 comment 작성
 > ### 2. 게시글, 댓글 삭제시 확인창 띄워서 사용자 의사 재확인
-> #### 1-1. pug의 a태그 onclick 속성에 해당 명령어 추가 
+> #### 2-1. pug의 a태그 onclick 속성에 해당 명령어 추가 
 > ```jade
 > a(href=`/posts/${post._id}/delete` onclick=`return confirm("게시글을 삭제하시겠습니까?")`) 삭제
 > ```
