@@ -1,7 +1,12 @@
-const express = require("express");
+// const express = require("express");
+// const router = express.Router();
+// const Post = require("../schemas/post");
+// const Comment = require("../schemas/comment");
+import express from "express";
+import Post from "../schemas/Post";
+import Comment from "../schemas/Comment";
+
 const router = express.Router();
-const Post = require("../schemas/post");
-const Comment = require("../schemas/comment");
 
 // GET- 전체 포스트 조회
 router.get("/", async (req, res) => {
@@ -26,7 +31,7 @@ router.post("/posts", async (req, res) => {
       contents,
     });
     return res.redirect("/");
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).render("writePage", {
       errorMessage: error.message,
     });
@@ -86,7 +91,10 @@ router.get("/posts/:id([0-9a-f]{24})/delete", async (req, res) => {
 
   // post와 연관된 comments도 DB에서 삭제
   const { comments } = post;
-  for (const comment of comments) {
+  // comments의 타입: Types.ObjectId[] | undefined
+  // 타입스크립트는 왜 undefined가 될 수 있다고 생각할까?
+  // TODO: non null assertion (!) 으로 undefined가 아님을 강제
+  for (const comment of comments!) {
     await Comment.findByIdAndDelete(comment._id);
   }
 
@@ -99,6 +107,10 @@ router.post("/posts/:id([0-9a-f]{24})/comments", async (req, res) => {
   const { id } = req.params;
   const { commenter, comment } = req.body;
   const post = await Post.findById(id);
+  // ID로 조회 실패시 404 페이지 렌더
+  if (!post) {
+    return res.status(404).render("404Page");
+  }
 
   // 댓글(comment) 내용없이 요청시 에러 메시지 발송
   if (!comment) {
@@ -116,11 +128,13 @@ router.post("/posts/:id([0-9a-f]{24})/comments", async (req, res) => {
     });
 
     // 댓글이 달리는 글(post)에 댓글 id 추가
-    post.comments.push(newComment._id);
+    // 왜 post의 comments를 undefined로 생각할까?
+    // TODO: comments에 non-null assertion 적용
+    post.comments!.push(newComment._id);
     post.save();
 
     return res.redirect(`/posts/${id}`);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).render(`/posts/${id}`, {
       errorMessage: error.message,
     });
@@ -145,7 +159,11 @@ router.get(
       return res.status(404).render("404Page");
     }
     // 글(post)에 저장된 댓글(comment) id 삭제
-    post.comments.pull(comment._id);
+    // 왜 post의 comments를 undefined로 생각할까?
+    // TODO: comments에 non-null assertion 적용
+    // TODO: push는 되는데(line 133) pull은 안돼서 @ts-ignore
+    // @ts-ignore
+    post.comments!.pull(comment._id);
     post.save();
 
     await Comment.findByIdAndDelete(commentId);
@@ -209,4 +227,5 @@ router.post(
   }
 );
 
-module.exports = router;
+// module.exports = router;
+export default router;

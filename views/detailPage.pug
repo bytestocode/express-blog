@@ -9,7 +9,7 @@ html(lang="ko")
             span &nbsp;&nbsp;|&nbsp;&nbsp;
             a(href=`/posts/${post._id}/edit`) 수정
             span &nbsp;&nbsp;|&nbsp;&nbsp;
-            a(href=`/posts/${post._id}/delete`) 삭제
+            a(href=`/posts/${post._id}/delete` onclick=`return confirm("게시글을 삭제하시겠습니까?")`) 삭제
             h3=post.title
             h4 by #{post.author}
             h5=post.createdAt.toLocaleString()
@@ -36,7 +36,7 @@ html(lang="ko")
                             div #{comment.comment}
                         a(href=`/posts/${post._id}/${comment._id}/edit`) 수정
                         span &nbsp;&nbsp;|&nbsp;&nbsp;
-                        a(href=`/posts/${post._id}/${comment._id}/delete`) 삭제
+                        a(href=`/posts/${post._id}/${comment._id}/delete` onclick=`return confirm("댓글을 삭제하시겠습니까?")`) 삭제
                         div &nbsp;
                     else
                         div
