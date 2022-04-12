@@ -8,7 +8,8 @@
 node: v14.17.5   
 express: v4.17.3   
 mongoose: v6.2.10   
-pug: v3.0.2   
+pug: v3.0.2
+typescript: v4.6.3
 
 ## 버전별 주요 특징 (변경사항)
 ### 22/04/09 (최초버젼)
@@ -42,11 +43,35 @@ pug: v3.0.2
 >> 당초- post만 삭제   
 >> 변경- post에 따른 comments 모두 삭제
 > ```javascript
-> // src/routes/index.js 75~79줄
+> // src/routes/index.ts
 > // post와 연관된 comments 삭제
 > const { comments } = post;
 > for (const comment of comments) {
 >     await Comment.findByIdAndDelete(comment._id);
+> }
+> ```
+ 
+### 22/04/12 17:37
+> ### 0. 타입스크립트 마이그레이션
+> #### 0-1. 프로젝트 구조
+> 당초: src 폴더에 모든 코드 위치   
+> 변경: src => ts 파일 / dist => js 파일 / views => pug 파일
+> #### 0-2. 스키마 인터페이스 정의
+> Post, Comment 스키마의 인터페이스를 정의 => IPost, IComment
+> ### 1. 주요 기능별 comment 작성
+> ### 2. 게시글, 댓글 삭제시 확인창 띄워서 사용자 의사 재확인
+> #### 1-1. pug의 a태그 onclick 속성에 해당 명령어 추가 
+> ```jade
+> a(href=`/posts/${post._id}/delete` onclick=`return confirm("게시글을 삭제하시겠습니까?")`) 삭제
+> ```
+> ### 3. 빈 댓글 내용으로 POST 요청하면 에러 메시지 return
+> ```javascript
+> // src/routes/index.ts
+> if (!comment) {
+>   return res.status(400).render("detailPage", {
+>     post,
+>     errorMessage: "댓글 내용을 입력해주세요.",
+>   });
 > }
 > ```
 
