@@ -5,8 +5,6 @@ html(lang="ko")
         link(rel="stylesheet", href="https://unpkg.com/mvp.css")
     body
         main
-            if errorMessage
-                span=errorMessage
             a(href="/") 홈으로
             span &nbsp;&nbsp;|&nbsp;&nbsp;
             a(href=`/posts/${post._id}/edit`) 수정
@@ -17,6 +15,8 @@ html(lang="ko")
             h5=post.createdAt.toLocaleString()
             div=post.contents
             hr
+            if errorMessage
+                span=errorMessage
             div
                 if comment
                     form(method="POST" action=`/posts/${post._id}/${comment._id}/edit`)

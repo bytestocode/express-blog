@@ -98,6 +98,15 @@ router.get("/posts/:id([0-9a-f]{24})/delete", async (req, res) => {
 router.post("/posts/:id([0-9a-f]{24})/comments", async (req, res) => {
   const { id } = req.params;
   const { commenter, comment } = req.body;
+  const post = await Post.findById(id);
+
+  // 댓글(comment) 내용없이 요청시 에러 메시지 발송
+  if (!comment) {
+    return res.status(400).render("detailPage", {
+      post,
+      errorMessage: "댓글 내용을 입력해주세요.",
+    });
+  }
 
   // DB에 댓글 등록 중 에러 발생시 try...catch 처리
   try {
@@ -107,7 +116,6 @@ router.post("/posts/:id([0-9a-f]{24})/comments", async (req, res) => {
     });
 
     // 댓글이 달리는 글(post)에 댓글 id 추가
-    const post = await Post.findById(id);
     post.comments.push(newComment._id);
     post.save();
 
@@ -174,6 +182,15 @@ router.post(
   async (req, res) => {
     const { id, commentId } = req.params;
     const { commenter, comment } = req.body;
+    const post = await Post.findById(id);
+
+    // 댓글(comment) 내용없이 요청시 에러 메시지 발송
+    if (!comment) {
+      return res.status(400).render("detailPage", {
+        post,
+        errorMessage: "댓글 내용을 입력해주세요.",
+      });
+    }
 
     const delComment = await Comment.exists({ _id: commentId });
     // ID로 조회 실패시 404 페이지 렌더
