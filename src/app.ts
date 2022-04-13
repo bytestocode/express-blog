@@ -1,9 +1,9 @@
 import express from "express";
-import connect from "./schemas";
+import connect from "./models";
 import router from "./routes";
 import path from "path";
 // const express = require("express");
-// const connect = require("./schemas");
+// const connect = require("./models");
 // const router = require("./routes");
 
 const PORT = 3000;

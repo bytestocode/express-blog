@@ -19,7 +19,7 @@ html(lang="ko")
                 span=errorMessage
             div
                 if comment
-                    form(method="POST" action=`/posts/${post._id}/${comment._id}/edit`)
+                    form(method="POST" action=`/posts/${post._id}/comments/${comment._id}/edit`)
                         input(placeholder="작성자" type="string" name="commenter" value=comment.commenter required=true)
                         input(placeholder="댓글 내용" type="string" name="comment" value=comment.comment required=true)
                         input(type="submit" value="확인")
@@ -34,9 +34,9 @@ html(lang="ko")
                         div
                             span #{comment.commenter}님의 댓글
                             div #{comment.comment}
-                        a(href=`/posts/${post._id}/${comment._id}/edit`) 수정
+                        a(href=`/posts/${post._id}/comments/${comment._id}/edit`) 수정
                         span &nbsp;&nbsp;|&nbsp;&nbsp;
-                        a(href=`/posts/${post._id}/${comment._id}/delete` onclick=`return confirm("댓글을 삭제하시겠습니까?")`) 삭제
+                        a(href=`/posts/${post._id}/comments/${comment._id}/delete` onclick=`return confirm("댓글을 삭제하시겠습니까?")`) 삭제
                         div &nbsp;
                     else
                         div
