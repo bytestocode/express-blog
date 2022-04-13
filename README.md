@@ -8,7 +8,7 @@
 node: v14.17.5   
 express: v4.17.3   
 mongoose: v6.2.10   
-pug: v3.0.2
+pug: v3.0.2    
 typescript: v4.6.3   
 joi: v17.6.0
 
