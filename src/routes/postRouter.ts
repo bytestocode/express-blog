@@ -1,6 +1,7 @@
 import express from "express";
 import Post from "../models/Post";
 import Comment from "../models/Comment";
+import { validatorMiddleware } from "../middlewares/validator";
 
 const postRouter = express.Router();
 
@@ -10,7 +11,7 @@ postRouter.get("/", (req, res) => {
 });
 
 // POST- 새글 DB에 저장 후 메인 페이지로 redirect
-postRouter.post("/", async (req, res) => {
+postRouter.post("/", validatorMiddleware, async (req, res) => {
   const { title, author, contents } = req.body;
 
   // DB에 새글 등록 중 에러 발생시 try...catch 처리
@@ -80,11 +81,10 @@ postRouter.get("/:id([0-9a-f]{24})/delete", async (req, res) => {
   }
 
   // post와 연관된 comments도 DB에서 삭제
-  const { comments } = post;
   // comments의 타입: Types.ObjectId[] | undefined
   // 타입스크립트는 왜 undefined가 될 수 있다고 생각할까?
   // TODO: non null assertion (!) 으로 undefined가 아님을 강제
-  for (const comment of comments!) {
+  for (const comment of post.comments!) {
     await Comment.findByIdAndDelete(comment._id);
   }
 
