@@ -1,4 +1,3 @@
-// const mongoose = require("mongoose");
 import mongoose from "mongoose";
 
 const connect = () => {
@@ -12,5 +11,4 @@ mongoose.connection.on("error", (err) => {
   console.error("몽고DB 연결 에러", err);
 });
 
-// module.exports = connect;
 export default connect;

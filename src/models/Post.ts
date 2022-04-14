@@ -1,5 +1,3 @@
-// const mongoose = require("mongoose");
-// const { Schema, Types, model } = mongoose;
 import { Schema, Types, model } from "mongoose";
 
 interface IPost {
@@ -7,7 +5,7 @@ interface IPost {
   author: string;
   contents: string;
   createdAt: Date;
-  comments?: Array<Types.ObjectId>;
+  comments: Array<Types.ObjectId>;
 }
 
 const postSchema = new Schema<IPost>({
@@ -18,6 +16,5 @@ const postSchema = new Schema<IPost>({
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
-// module.exports = model("Post", postSchema);
 const Post = model<IPost>("Post", postSchema);
 export default Post;

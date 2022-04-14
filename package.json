@@ -11,14 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "joi": "^17.6.0",
     "mongoose": "^6.2.10",
     "pug": "^3.0.2"
   },
   "devDependencies": {
-    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.23",
     "jest": "^27.5.1",

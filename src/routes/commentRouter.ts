@@ -1,13 +1,13 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import Post from "../models/Post";
 import Comment from "../models/Comment";
 
 const commentRouter = express.Router({ mergeParams: true });
 
 // POST- 댓글 작성하기
-commentRouter.post("/", async (req, res) => {
-  // @ts-ignore
-  // TODO: @ts-ignore 적용 => id 값 확인 어려움
+commentRouter.post("/", async (req: Request, res: Response) => {
+  // TODO: TS2339: Property 'id' does not exist on type '{}'.
+  // req에 Request 타입 적용해서 해결
   const { id } = req.params;
   const { commenter, comment } = req.body;
   const post = await Post.findById(id);
@@ -32,9 +32,7 @@ commentRouter.post("/", async (req, res) => {
     });
 
     // 댓글이 달리는 글(post)에 댓글 id 추가
-    // 왜 post의 comments를 undefined로 생각할까?
-    // TODO: comments에 non-null assertion 적용
-    post.comments!.push(newComment._id);
+    post.comments.push(newComment._id);
     post.save();
 
     return res.redirect(`/posts/${id}`);
@@ -55,18 +53,21 @@ commentRouter.get("/:commentId([0-9a-f]{24})/delete", async (req, res) => {
     return res.status(404).render("404Page");
   }
 
-  const post = await Post.findById(id);
-  // ID로 조회 실패시 404 페이지 렌더
-  if (!post) {
-    return res.status(404).render("404Page");
-  }
   // 글(post)에 저장된 댓글(comment) id 삭제
-  // 왜 post의 comments를 undefined로 생각할까?
-  // TODO: comments에 non-null assertion 적용
-  // TODO: push는 되는데(line 133) pull은 안돼서 @ts-ignore
-  // @ts-ignore
-  post.comments!.pull(comment._id);
-  post.save();
+  // pull이 타입에러 나서 고친 코드
+  await Post.findByIdAndUpdate(id, {
+    $pull: { comments: { _id: comment._id } },
+  });
+
+  // // 아래는 타입스크립트 에러 코드...
+  // const post = await Post.findById(id);
+  // // ID로 조회 실패시 404 페이지 렌더
+  // if (!post) return res.status(404).render("404Page");
+  //
+  // // TODO: TS2339: Property 'pull' does not exist on type 'ObjectId[]'.
+  // // push는 되는데(line 38) pull 안되는 이유?
+  // post.comments.pull(comment._id);
+  // post.save();
 
   await Comment.findByIdAndDelete(commentId);
 

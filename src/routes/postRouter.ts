@@ -81,10 +81,7 @@ postRouter.get("/:id([0-9a-f]{24})/delete", async (req, res) => {
   }
 
   // post와 연관된 comments도 DB에서 삭제
-  // comments의 타입: Types.ObjectId[] | undefined
-  // 타입스크립트는 왜 undefined가 될 수 있다고 생각할까?
-  // TODO: non null assertion (!) 으로 undefined가 아님을 강제
-  for (const comment of post.comments!) {
+  for (const comment of post.comments) {
     await Comment.findByIdAndDelete(comment._id);
   }
 
