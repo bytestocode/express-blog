@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 
+// 새 글(post) 저장하기 전에 제목, 작성자, 내용의 형식을 검증하는 미들웨어
 export const validatorMiddleware = (
   req: Request,
   res: Response,
