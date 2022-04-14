@@ -98,6 +98,27 @@ joi: v17.6.0
 ## 와이어프레임
 <img src="./img/framework.png" alt=""/>
 
+## DB 관계 설정
+### 1. Collections
+#### 1-1. Post
+> Schema({ title, author, contents, createdAt, comments });
+#### 1-2. Comment
+> Schema({ commenter, comment, createdAt });
+### 2. Post가 Comment의 ObjectId를 배열로 포함
+#### 2-1. <이유> 게시글에 댓글이 달리므로 게시글이 댓글을 포함하는 개념으로 생각
+#### 2-2. <문제점> Post는 Comment 정보를 저장하지 않고 Comment가 Post 정보를 저장하는 것이 유리할 것으로 보임
+> Post가 Comment 정보를 포함하는 경우 (현재)
+> > [Post 삭제시]   
+> > Post에 달린 Comment들을 CommentId로 찾아서 삭제   
+> > [Comment 추가/삭제시]   
+> > Post에 해당 Comment의 Id를 추가/삭제 해야 함   
+> 
+> Comment가 Post 정보를 포함하는 경우 (추천)
+> > [Post 삭제시]   
+> > Post에 달린 Comment들을 PostId로 찾아서 삭제   
+> > [Comment 추가/삭제시]   
+> > Post 별도 처리 필요 없음
+
 ## API
 ### 1. 전체 게시글 목록 조회
 #### Request
@@ -162,7 +183,7 @@ joi: v17.6.0
 ### 8. 댓글 수정
 #### Request
 > method: GET, POST   
-> URL: /posts/:id/:commentId/edit   
+> URL: /posts/:id/comments/:commentId/edit   
 > body: { author, contents }
 
 #### Response
@@ -172,7 +193,7 @@ joi: v17.6.0
 ### 9. 댓글 삭제
 #### Request
 > method: GET   
-> URL: /posts/:id/:commentId/delete
+> URL: /posts/:id/comments/:commentId/delete
 
 #### Response
 > HTTP 상태코드: 200    
